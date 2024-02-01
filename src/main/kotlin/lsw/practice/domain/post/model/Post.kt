@@ -1,6 +1,7 @@
 package lsw.practice.domain.post.model
 
 import jakarta.persistence.*
+import lsw.practice.domain.user.model.User
 import java.time.LocalDateTime
 
 @Entity
@@ -17,7 +18,14 @@ class Post(
     var createdAt: LocalDateTime = LocalDateTime.now(),
 
     @Column(name = "is_deleted", nullable = false)
-    var isDeleted : Boolean = false
+    var isDeleted : Boolean = false,
+
+    @ManyToOne(
+        fetch = FetchType.LAZY,
+        cascade = [CascadeType.ALL]
+    )
+    @JoinColumn(name = "user_id", nullable = false)
+    var user: User,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
