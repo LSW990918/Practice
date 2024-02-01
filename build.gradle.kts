@@ -49,6 +49,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.boot:spring-boot-starter-security")//시큐리티
     implementation("io.jsonwebtoken:jjwt-api:0.12.3")//시큐리티
+
     implementation("com.querydsl:querydsl-jpa:$queryDslVersion:jakarta") // 쿼리DSL
     kapt("com.querydsl:querydsl-apt:$queryDslVersion:jakarta") // 쿼리DSL
 
