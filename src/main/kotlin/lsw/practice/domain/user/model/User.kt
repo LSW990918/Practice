@@ -22,6 +22,9 @@ class User(
 
     @Column(name = "created_at", nullable = false)
     var createdAt: LocalDateTime = LocalDateTime.now(),
+
+    @Column(name = "is_deleted", nullable = false)
+    var isDeleted: Boolean = false
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

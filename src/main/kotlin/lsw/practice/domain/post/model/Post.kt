@@ -26,6 +26,9 @@ class Post(
     )
     @JoinColumn(name = "user_id", nullable = false)
     var user: User,
+
+    @Column(name = "name", nullable = false)
+    var name: String,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
