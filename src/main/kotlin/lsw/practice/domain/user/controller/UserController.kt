@@ -31,15 +31,16 @@ class UserController(
 
     }
 
-    @PutMapping("/{userId}/profile")
-    fun updateUserProfile(
+    @PutMapping("/profile")
+    fun updateUser(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
-        @PathVariable userId: Long?,
+        userId: Long?,
+        password: String,
         @RequestBody request: UpdateUserRequest
     ): ResponseEntity<UserResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(userService.updateUser(userPrincipal, request))
+            .body(userService.updateUser(userPrincipal, userId, password, request))
     }
 
     @GetMapping
@@ -50,20 +51,20 @@ class UserController(
             .body(userService.getUserList())
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping()
     fun getUser(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
-        @PathVariable userId: Long?
+        userId: Long?
     ) : ResponseEntity<UserResponse>{
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(userService.getUser(userPrincipal, userId))
     }
 
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("/delete")
     fun deleteUser(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
-        @PathVariable userId: Long?
+        userId: Long?
     ) : ResponseEntity<Unit>{
         return ResponseEntity
             .status(HttpStatus.NO_CONTENT)

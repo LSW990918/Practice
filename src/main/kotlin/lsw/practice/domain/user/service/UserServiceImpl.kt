@@ -6,6 +6,7 @@ import lsw.practice.domain.user.dto.*
 import lsw.practice.domain.user.model.User
 import lsw.practice.domain.user.model.UserRole
 import lsw.practice.domain.user.repository.UserRepository
+import lsw.practice.infra.security.UserPrincipal
 import lsw.practice.infra.security.jwt.JwtPlugin
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -37,9 +38,10 @@ class UserServiceImpl(
     }
 
     override fun signIn(request: SignInRequest): SignInResponse {
-        val user = userRepository.findByEmail(request.email) ?: throw ModelNotFoundException("User", null)
+        val user = userRepository.findByEmail(request.email)
+            ?: throw ModelNotFoundException("User", null)
 
-        if (!passwordEncoder.matches(request.password, user.password) ) {
+        if (!passwordEncoder.matches(request.password, user.password)) {
             throw InvalidCredentialException()
         }
 
@@ -52,25 +54,55 @@ class UserServiceImpl(
         )
     }
 
-    override fun updateUser(userId: Long, request: UpdateUserRequest): UserResponse {
-        val user = userRepository.findByIdOrNull(userId)
-            ?: throw ModelNotFoundException("User", userId)
-        user.name = request.name
-        user.email = request.email
-        user.password = request.password
-        return userRepository.save(user).toResponse()
+    override fun updateUser(
+        userPrincipal: UserPrincipal,
+        userId: Long?,
+        password: String,
+        request: UpdateUserRequest
+    ): UserResponse {
+        val user = if (userId != null && userPrincipal.authorities.toString() == "[ROLE_ADMIN]") {
+            userRepository.findByIdOrNull(userId)
+                ?: throw ModelNotFoundException("user", userId)
+        } else {
+            userRepository.findByIdOrNull(userPrincipal.id)
+                ?: throw ModelNotFoundException("user", userId)
+        }
+        if (userPrincipal.authorities.toString() != "[ROLE_ADMIN]"
+            && !passwordEncoder.matches(password, user.password)) {
+            throw InvalidCredentialException()
+        }
+        var (name, email) = request
+        user.name = name
+        user.email = email
+        user.password = passwordEncoder.encode(request.password)
+        return user.toResponse()
     }
 
-    override fun getUserList() {
-        TODO("Not yet implemented")
+    override fun getUserList(): List<UserResponse> {
+        val userList = userRepository.findAll()
+        return userList.map { it.toResponse() }
     }
 
-    override fun getUser() {
-        TODO("Not yet implemented")
+    override fun getUser(userPrincipal: UserPrincipal, userId: Long?): UserResponse {
+        val user = if (userId != null && userPrincipal.authorities.toString() == "[ROLE_ADMIN]") {
+            userRepository.findByIdOrNull(userId)
+                ?: throw ModelNotFoundException("user", userId)
+        } else {
+            userRepository.findByIdOrNull(userPrincipal.id)
+                ?: throw ModelNotFoundException("user", userId)
+        }
+        return user.toResponse()
     }
 
-    override fun deleteUser() {
-        TODO("Not yet implemented")
+    override fun deleteUser(userPrincipal: UserPrincipal, userId: Long?) {
+        val user = if (userId != null && userPrincipal.authorities.toString() == "[ROLE_ADMIN]") {
+            userRepository.findByIdOrNull(userId)
+                ?: throw ModelNotFoundException("user", userId)
+        } else {
+            userRepository.findByIdOrNull(userPrincipal.id)
+                ?: throw ModelNotFoundException("user", userId)
+        }
+        userRepository.delete(user)
     }
 }
 
