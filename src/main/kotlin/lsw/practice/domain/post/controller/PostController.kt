@@ -5,6 +5,9 @@ import lsw.practice.domain.post.dto.PostResponse
 import lsw.practice.domain.post.dto.UpdatePostRequest
 import lsw.practice.domain.post.service.PostService
 import lsw.practice.infra.security.UserPrincipal
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -15,10 +18,11 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/post")
+@RequestMapping("/posts")
 class PostController(
     private val postService: PostService
 ) {
@@ -65,9 +69,25 @@ class PostController(
     }
 
     @GetMapping
-    fun getPostList(): ResponseEntity<List<PostResponse>> {
+    fun getPostList(
+        @PageableDefault(
+            size = 15,
+            sort = ["id"]
+        ) pageable: Pageable,
+        @RequestParam(value = "status", required = false) status: String?
+    ): ResponseEntity<Page<PostResponse>> {
+
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(postService.getPostList())
+            .body(postService.getPaginatedPostList(pageable, status))
+    }
+
+    //쿼리DSL추가
+
+    @GetMapping("/search")
+    fun searchPostList(@RequestParam(value = "title") title : String) : ResponseEntity<List<PostResponse>>{
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(postService.searchPostList(title))
     }
 }
