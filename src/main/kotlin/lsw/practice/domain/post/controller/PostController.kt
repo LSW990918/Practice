@@ -5,6 +5,9 @@ import lsw.practice.domain.post.dto.PostResponse
 import lsw.practice.domain.post.dto.UpdatePostRequest
 import lsw.practice.domain.post.service.PostService
 import lsw.practice.infra.security.UserPrincipal
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -66,10 +69,17 @@ class PostController(
     }
 
     @GetMapping
-    fun getPostList(): ResponseEntity<List<PostResponse>> {
+    fun getPostList(
+        @PageableDefault(
+            size = 15,
+            sort = ["id"]
+        ) pageable: Pageable,
+        @RequestParam(value = "status", required = false) status: String?
+    ): ResponseEntity<Page<PostResponse>> {
+
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(postService.getPostList())
+            .body(postService.getPaginatedPostList(pageable, status))
     }
 
     //쿼리DSL추가

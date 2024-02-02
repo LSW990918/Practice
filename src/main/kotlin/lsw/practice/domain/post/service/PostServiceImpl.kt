@@ -10,6 +10,8 @@ import lsw.practice.domain.post.repository.PostRepository
 import lsw.practice.domain.post.repository.PostRepositoryImpl
 import lsw.practice.domain.user.repository.UserRepository
 import lsw.practice.infra.security.UserPrincipal
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -80,6 +82,10 @@ class PostServiceImpl(
     //쿼리DSL추가
     override fun searchPostList(title: String): List<PostResponse>? {
         return postRepository.searchPostListByTitle(title).map { it.toResponse() }
+    }
+
+    override fun getPaginatedPostList(pageable: Pageable, status: String?): Page<PostResponse>? {
+        return postRepository.findByPageable(pageable).map { it.toResponse() }
     }
 }
 
