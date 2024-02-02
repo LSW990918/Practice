@@ -1,6 +1,5 @@
 package lsw.practice.domain.post.service
 
-import lsw.practice.domain.exception.InvalidCredentialException
 import lsw.practice.domain.exception.MismatchException
 import lsw.practice.domain.exception.ModelNotFoundException
 import lsw.practice.domain.post.dto.CreatePostRequest
@@ -8,6 +7,7 @@ import lsw.practice.domain.post.dto.PostResponse
 import lsw.practice.domain.post.dto.UpdatePostRequest
 import lsw.practice.domain.post.model.Post
 import lsw.practice.domain.post.repository.PostRepository
+import lsw.practice.domain.post.repository.PostRepositoryImpl
 import lsw.practice.domain.user.repository.UserRepository
 import lsw.practice.infra.security.UserPrincipal
 import org.springframework.data.repository.findByIdOrNull
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class PostServiceImpl(
     private val postRepository: PostRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ): PostService {
     @Transactional
     override fun createPost(
@@ -75,6 +75,11 @@ class PostServiceImpl(
     override fun getPostList(): List<PostResponse> {
         val postList = postRepository.findAll()
         return postList.map { it.toResponse() }
+    }
+
+    //쿼리DSL추가
+    override fun searchPostList(title: String): List<PostResponse>? {
+        return postRepository.searchPostListByTitle(title).map { it.toResponse() }
     }
 }
 

@@ -15,4 +15,7 @@ interface PostService {
     fun getPost(postId: Long): PostResponse
 
     fun getPostList(): List<PostResponse>
+
+    //쿼리DSL추가
+    fun searchPostList(title: String): List<PostResponse>?
 }

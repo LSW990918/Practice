@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -69,5 +70,14 @@ class PostController(
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(postService.getPostList())
+    }
+
+    //쿼리DSL추가
+
+    @GetMapping("/search")
+    fun searchPostList(@RequestParam(value = "title") title : String) : ResponseEntity<List<PostResponse>>{
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(postService.searchPostList(title))
     }
 }
