@@ -47,13 +47,14 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("io.jsonwebtoken:jjwt-api:0.12.3")
-    implementation("com.querydsl:querydsl-jpa:$queryDslVersion:jakarta") // 추가!
-    kapt("com.querydsl:querydsl-apt:$queryDslVersion:jakarta") // 추가!
+    implementation("org.springframework.boot:spring-boot-starter-security")//시큐리티
+    implementation("io.jsonwebtoken:jjwt-api:0.12.3")//시큐리티
 
-    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
-    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
+    implementation("com.querydsl:querydsl-jpa:$queryDslVersion:jakarta") // 쿼리DSL
+    kapt("com.querydsl:querydsl-apt:$queryDslVersion:jakarta") // 쿼리DSL
+
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")//시큐리티
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")//시큐리티
     runtimeOnly("org.postgresql:postgresql")
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
