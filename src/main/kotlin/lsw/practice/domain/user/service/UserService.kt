@@ -8,7 +8,12 @@ interface UserService {
 
     fun signIn(request: SignInRequest): SignInResponse
 
-    fun updateUser(userPrincipal: UserPrincipal, request: UpdateUserRequest): UserResponse
+    fun updateUser(
+        userPrincipal: UserPrincipal,
+        userId: Long?,
+        password: String,
+        request: UpdateUserRequest
+    ): UserResponse
 
     fun getUserList(): List<UserResponse>
 
