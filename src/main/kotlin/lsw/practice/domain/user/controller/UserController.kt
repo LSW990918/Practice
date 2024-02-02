@@ -1,10 +1,13 @@
 package lsw.practice.domain.user.controller
 
-import com.sun.security.auth.UserPrincipal
+
 import lsw.practice.domain.user.dto.*
 import lsw.practice.domain.user.service.UserService
+import lsw.practice.infra.security.UserPrincipal
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -16,7 +19,7 @@ class UserController(
     @PostMapping("/signup")
     fun signUp(@RequestBody signUpRequest: SignUpRequest): ResponseEntity<UserResponse> {
         return ResponseEntity
-            .status(HttpStatus.OK)
+            .status(HttpStatus.CREATED)
             .body(userService.signUp(signUpRequest))
     }
 
@@ -28,22 +31,42 @@ class UserController(
 
     }
 
-//    @PutMapping("/{userId}/profile")
-//    fun updateUserProfile(
-//        @PathVariable user: UserPrincipal,
-//        @RequestBody updateUserRequest: UpdateUserRequest
-//    ): ResponseEntity<UserResponse> {
-//        return ResponseEntity
-//            .status(HttpStatus.OK)
-//            .body(userService.updateUser(user, updateUserRequest))
-//    }
-
-    fun getUserList() {
+    @PutMapping("/{userId}/profile")
+    fun updateUserProfile(
+        @AuthenticationPrincipal userPrincipal: UserPrincipal,
+        @PathVariable userId: Long?,
+        @RequestBody request: UpdateUserRequest
+    ): ResponseEntity<UserResponse> {
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(userService.updateUser(userPrincipal, request))
     }
 
-    fun getUser() {
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    fun getUserList() : ResponseEntity<List<UserResponse>>{
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(userService.getUserList())
     }
 
-    fun deleteUser() {
+    @GetMapping("/{userId}")
+    fun getUser(
+        @AuthenticationPrincipal userPrincipal: UserPrincipal,
+        @PathVariable userId: Long?
+    ) : ResponseEntity<UserResponse>{
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(userService.getUser(userPrincipal, userId))
+    }
+
+    @DeleteMapping("/{userId}")
+    fun deleteUser(
+        @AuthenticationPrincipal userPrincipal: UserPrincipal,
+        @PathVariable userId: Long?
+    ) : ResponseEntity<Unit>{
+        return ResponseEntity
+            .status(HttpStatus.NO_CONTENT)
+            .body(userService.deleteUser(userPrincipal, userId))
     }
 }

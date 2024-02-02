@@ -4,8 +4,8 @@ import java.time.LocalDateTime
 
 data class PostResponse(
     val id: Long,
+    val name: String,
     val title: String,
     val content: String,
-    val name: String,
     val createdAt: LocalDateTime,
     )
