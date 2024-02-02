@@ -1,17 +1,18 @@
 package lsw.practice.domain.user.service
 
 import lsw.practice.domain.user.dto.*
+import lsw.practice.infra.security.UserPrincipal
 
 interface UserService {
     fun signUp(request: SignUpRequest): UserResponse
 
     fun signIn(request: SignInRequest): SignInResponse
 
-    fun updateUser(userId: Long, request: UpdateUserRequest): UserResponse
+    fun updateUser(userPrincipal: UserPrincipal, request: UpdateUserRequest): UserResponse
 
-    fun getUserList()
+    fun getUserList(): List<UserResponse>
 
-    fun getUser()
+    fun getUser(userPrincipal: UserPrincipal, userId: Long?): UserResponse
 
-    fun deleteUser()
+    fun deleteUser(userPrincipal: UserPrincipal, userId: Long?)
 }

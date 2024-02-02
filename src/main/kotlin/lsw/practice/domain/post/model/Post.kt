@@ -1,6 +1,7 @@
 package lsw.practice.domain.post.model
 
 import jakarta.persistence.*
+import lsw.practice.domain.comment.model.Comment
 import lsw.practice.domain.user.model.User
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
@@ -36,8 +37,24 @@ class Post(
 
     @Column(name = "name", nullable = false)
     var name: String,
+
+    @OneToMany(
+        mappedBy = "post",
+        cascade = [CascadeType.ALL],
+        orphanRemoval = true,
+        fetch = FetchType.LAZY
+    )
+    var comments: MutableList<Comment> = mutableListOf(),
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null
+
+    fun addComment(comment: Comment) {
+        comments.add(comment)
+    }
+
+    fun removeComment(comment: Comment) {
+        comments.remove(comment)
+    }
 }
