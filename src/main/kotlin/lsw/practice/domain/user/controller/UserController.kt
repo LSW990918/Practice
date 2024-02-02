@@ -43,7 +43,7 @@ class UserController(
             .body(userService.updateUser(userPrincipal, userId, password, request))
     }
 
-    @GetMapping
+    @GetMapping("/user-list")
     @PreAuthorize("hasRole('ADMIN')")
     fun getUserList() : ResponseEntity<List<UserResponse>>{
         return ResponseEntity
