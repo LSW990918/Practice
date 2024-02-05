@@ -1,5 +1,6 @@
 package lsw.practice.domain.post.dto
 
+import lsw.practice.domain.comment.model.Comment
 import java.time.LocalDateTime
 
 data class PostResponse(
@@ -8,4 +9,5 @@ data class PostResponse(
     val title: String,
     val content: String,
     val createdAt: LocalDateTime,
+    val comments: List<Comment>
     )
