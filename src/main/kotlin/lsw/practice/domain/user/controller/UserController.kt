@@ -1,6 +1,7 @@
 package lsw.practice.domain.user.controller
 
 
+import jakarta.validation.Valid
 import lsw.practice.domain.user.dto.*
 import lsw.practice.domain.user.service.UserService
 import lsw.practice.infra.security.UserPrincipal
@@ -8,23 +9,25 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/users")
+@Validated
 class UserController(
     private val userService: UserService
 ) {
 
     @PostMapping("/signup")
-    fun signUp(@RequestBody signUpRequest: SignUpRequest): ResponseEntity<UserResponse> {
+    fun signUp(@Valid @RequestBody signUpRequest: SignUpRequest): ResponseEntity<UserResponse> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(userService.signUp(signUpRequest))
     }
 
     @PostMapping("/signin")
-    fun signIn(@RequestBody signInRequest: SignInRequest): ResponseEntity<SignInResponse> {
+    fun signIn(@Valid @RequestBody signInRequest: SignInRequest): ResponseEntity<SignInResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(userService.signIn(signInRequest))
@@ -36,7 +39,7 @@ class UserController(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
         userId: Long?,
         password: String,
-        @RequestBody request: UpdateUserRequest
+        @Valid @RequestBody request: UpdateUserRequest
     ): ResponseEntity<UserResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
