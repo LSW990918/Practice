@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional
 class PostServiceImpl(
     private val postRepository: PostRepository,
     private val userRepository: UserRepository,
-): PostService {
+) : PostService {
     @Transactional
     override fun createPost(
         userPrincipal: UserPrincipal,
@@ -80,8 +80,8 @@ class PostServiceImpl(
     }
 
     //쿼리DSL추가
-    override fun searchPostList(title: String): List<PostResponse>? {
-        return postRepository.searchPostListByTitle(title).map { it.toResponse() }
+    override fun searchPostList(title: String?, name: String?): List<PostResponse>? {
+        return postRepository.searchPostList(title, name).map { it.toResponse() }
     }
 
     override fun getPaginatedPostList(pageable: Pageable, status: String?): Page<PostResponse>? {

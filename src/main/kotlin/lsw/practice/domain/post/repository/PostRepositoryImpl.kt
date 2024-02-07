@@ -1,5 +1,6 @@
 package lsw.practice.domain.post.repository
 
+import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.types.Expression
 import com.querydsl.core.types.Order
 import com.querydsl.core.types.OrderSpecifier
@@ -15,13 +16,23 @@ import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
 
 @Repository
-class PostRepositoryImpl: QueryDslSupport(), CustomPostRepository {
+class PostRepositoryImpl : QueryDslSupport(), CustomPostRepository {
 
     private val post = QPost.post
 
-    override fun searchPostListByTitle(title: String): List<Post> {
-        return queryFactory.selectFrom(post)
-            .where(post.title.containsIgnoreCase(title))
+    override fun searchPostList(title: String?, name: String?): List<Post> {
+        val post = QPost.post
+        val builder = BooleanBuilder()
+        if (title != null) {
+            builder.and(post.title.eq(title))
+        }
+        if (name != null) {
+            builder.and(post.name.eq(name))
+        }
+
+        return queryFactory
+            .selectFrom(post)
+            .where(builder)
             .fetch()
     }
 
@@ -59,9 +70,9 @@ class PostRepositoryImpl: QueryDslSupport(), CustomPostRepository {
     private fun getOrderSpecifier(pageable: Pageable, path: EntityPathBase<*>): Array<OrderSpecifier<*>> {
         val pathBuilder = PathBuilder(path.type, path.metadata)
 
-        return pageable.sort.toList().map {
-            order -> OrderSpecifier(
-                if(order.isAscending) Order.ASC else Order.DESC,
+        return pageable.sort.toList().map { order ->
+            OrderSpecifier(
+                if (order.isAscending) Order.ASC else Order.DESC,
                 pathBuilder.get(order.property) as Expression<Comparable<*>>
             )
         }.toTypedArray()

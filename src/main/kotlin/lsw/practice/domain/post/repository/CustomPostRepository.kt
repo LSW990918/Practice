@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 
 interface CustomPostRepository {
-    fun searchPostListByTitle(title: String): List<Post>
+    fun searchPostList(title: String?, name: String?): List<Post>
 
     fun findByPageable(pageable: Pageable): Page<Post>
 }

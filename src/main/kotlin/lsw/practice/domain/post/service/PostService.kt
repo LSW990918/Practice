@@ -19,6 +19,6 @@ interface PostService {
     fun getPostList(): List<PostResponse>
 
     //쿼리DSL추가
-    fun searchPostList(title: String): List<PostResponse>?
+    fun searchPostList(title: String?, name: String?): List<PostResponse>?
     fun getPaginatedPostList(pageable: Pageable, status: String?): Page<PostResponse>?
 }
