@@ -95,7 +95,7 @@ fun Post.toResponse(): PostResponse {
         title = title,
         content = content,
         name = name,
-        createdAt = createdAt,
+//        createdAt = createdAt,
         comments = comments
     )
 }

@@ -40,6 +40,10 @@ allOpen {
 
 val queryDslVersion = "5.0.0"
 
+val kotestVersion = "5.5.5" // kotest
+
+val mockkVersion = "1.13.8" // mockk
+
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -58,7 +62,13 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-test") //기본 테스트 의존성
+
+    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion") // kotest 관련
+    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion") // kotest 관련
+    testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.3") // kotest 관련
+    testImplementation("io.mockk:mockk:$mockkVersion") // mockk
+    testImplementation("org.postgresql:postgresql")//테스트용 데이터소스URL
 }
 
 tasks.withType<KotlinCompile> {
@@ -68,6 +78,10 @@ tasks.withType<KotlinCompile> {
     }
 }
 
-tasks.withType<Test> {
+tasks.withType<Test>().configureEach() { // 변경 !!
     useJUnitPlatform()
+}
+
+tasks.bootBuildImage {
+    builder.set("paketobuildpacks/builder-jammy-base:latest")
 }
