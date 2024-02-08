@@ -21,7 +21,6 @@ class PostRepositoryImpl : QueryDslSupport(), CustomPostRepository {
     private val post = QPost.post
 
     override fun searchPostList(title: String?, name: String?): List<Post> {
-        val post = QPost.post
         val builder = BooleanBuilder()
         if (title != null) {
             builder.and(post.title.eq(title))
