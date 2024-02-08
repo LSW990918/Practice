@@ -1,5 +1,6 @@
 package lsw.practice.domain.post.service
 
+import lsw.practice.domain.comment.repository.CommentRepository
 import lsw.practice.domain.exception.MismatchException
 import lsw.practice.domain.exception.ModelNotFoundException
 import lsw.practice.domain.post.dto.CreatePostRequest
