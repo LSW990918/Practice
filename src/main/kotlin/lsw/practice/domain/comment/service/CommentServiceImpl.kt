@@ -1,6 +1,7 @@
 package lsw.practice.domain.comment.service
 
 import lsw.practice.domain.comment.dto.CommentResponse
+import lsw.practice.domain.comment.dto.CommentResponse.Companion.toResponse
 import lsw.practice.domain.comment.dto.CreateCommentRequest
 import lsw.practice.domain.comment.dto.UpdateCommentRequest
 import lsw.practice.domain.comment.model.Comment
@@ -84,13 +85,4 @@ class CommentServiceImpl(
         val commentList = post.comments
         return commentList.map { it.toResponse() }
     }
-}
-
-fun Comment.toResponse(): CommentResponse {
-    return CommentResponse(
-        id = id!!,
-        name = name,
-        content = content,
-        createdAt = createdAt
-    )
 }

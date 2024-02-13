@@ -2,6 +2,7 @@ package lsw.practice.domain.post.model
 
 import jakarta.persistence.*
 import lsw.practice.domain.comment.model.Comment
+import lsw.practice.domain.user.model.BaseTime
 import lsw.practice.domain.user.model.User
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
@@ -22,8 +23,8 @@ class Post(
     @Column(name = "content", nullable = false)
     var content: String,
 
-    @Column(name = "created_at", nullable = false)
-    var createdAt: LocalDateTime = LocalDateTime.now(),
+//    @Column(name = "created_at", nullable = false)
+//    var createdAt: LocalDateTime = LocalDateTime.now(),
 
     @Column(name = "is_deleted", nullable = false)
     var isDeleted : Boolean = false,
@@ -45,7 +46,7 @@ class Post(
         fetch = FetchType.LAZY
     )
     var comments: MutableList<Comment> = mutableListOf(),
-) {
+): BaseTime() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null
