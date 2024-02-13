@@ -8,6 +8,6 @@ data class PostResponse(
     val name: String,
     val title: String,
     val content: String,
-    val createdAt: LocalDateTime,
+//    val createdAt: LocalDateTime,
     val comments: List<Comment>
     )
