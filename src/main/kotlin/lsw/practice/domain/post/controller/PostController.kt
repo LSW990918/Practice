@@ -1,5 +1,6 @@
 package lsw.practice.domain.post.controller
 
+import jakarta.validation.Valid
 import lsw.practice.domain.post.dto.CreatePostRequest
 import lsw.practice.domain.post.dto.PostResponse
 import lsw.practice.domain.post.dto.UpdatePostRequest
@@ -11,6 +12,7 @@ import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/posts")
+@Validated
 class PostController(
     private val postService: PostService
 ) {
@@ -30,7 +33,7 @@ class PostController(
     @PostMapping
     fun createPost(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
-        @RequestBody request: CreatePostRequest
+        @Valid @RequestBody request: CreatePostRequest
     ): ResponseEntity<PostResponse> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
@@ -41,7 +44,7 @@ class PostController(
     fun updatePost(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
         @PathVariable postId: Long,
-        @RequestBody request: UpdatePostRequest
+        @Valid @RequestBody request: UpdatePostRequest
     ): ResponseEntity<PostResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
@@ -85,9 +88,12 @@ class PostController(
     //쿼리DSL추가
 
     @GetMapping("/search")
-    fun searchPostList(@RequestParam(value = "title") title : String) : ResponseEntity<List<PostResponse>>{
+    fun searchPostList(
+        @RequestParam(value = "title") title: String?,
+        @RequestParam(value = "name") name: String?
+    ): ResponseEntity<List<PostResponse>> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(postService.searchPostList(title))
+            .body(postService.searchPostList(title, name))
     }
 }

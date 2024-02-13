@@ -18,7 +18,7 @@ class UserServiceImpl(
     private val passwordEncoder: PasswordEncoder,
     private val jwtPlugin: JwtPlugin
 ) : UserService {
-    override fun signUp(request: SignUpRequest): UserResponse {
+    override fun signUp(userRole: UserRole, request: SignUpRequest): UserResponse {
         if (userRepository.existsByEmail(request.email)) {
             throw IllegalStateException("Email is already in use")
         }
@@ -28,11 +28,12 @@ class UserServiceImpl(
                 email = request.email,
                 password = passwordEncoder.encode(request.password),
                 name = request.name,
-                role = when (request.role) {
-                    "USER" -> UserRole.USER
-                    "ADMIN" -> UserRole.ADMIN
-                    else -> throw IllegalArgumentException("Invalid role")
-                }
+                role = userRole
+//                role = when (request.role) {
+//                    "USER" -> UserRole.USER
+//                    "ADMIN" -> UserRole.ADMIN
+//                    else -> throw IllegalArgumentException("Invalid role")
+//                }
             )
         ).toResponse()
     }
@@ -68,7 +69,8 @@ class UserServiceImpl(
                 ?: throw ModelNotFoundException("user", userId)
         }
         if (userPrincipal.authorities.toString() != "[ROLE_ADMIN]"
-            && !passwordEncoder.matches(password, user.password)) {
+            && !passwordEncoder.matches(password, user.password)
+        ) {
             throw InvalidCredentialException()
         }
         var (name, email) = request
