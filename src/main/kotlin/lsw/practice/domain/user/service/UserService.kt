@@ -1,10 +1,11 @@
 package lsw.practice.domain.user.service
 
 import lsw.practice.domain.user.dto.*
+import lsw.practice.domain.user.model.UserRole
 import lsw.practice.infra.security.UserPrincipal
 
 interface UserService {
-    fun signUp(request: SignUpRequest): UserResponse
+    fun signUp(userRole: UserRole, request: SignUpRequest): UserResponse
 
     fun signIn(request: SignInRequest): SignInResponse
 

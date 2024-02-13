@@ -3,6 +3,7 @@ package lsw.practice.domain.user.controller
 
 import jakarta.validation.Valid
 import lsw.practice.domain.user.dto.*
+import lsw.practice.domain.user.model.UserRole
 import lsw.practice.domain.user.service.UserService
 import lsw.practice.infra.security.UserPrincipal
 import org.springframework.http.HttpStatus
@@ -20,10 +21,12 @@ class UserController(
 ) {
 
     @PostMapping("/signup")
-    fun signUp(@Valid @RequestBody signUpRequest: SignUpRequest): ResponseEntity<UserResponse> {
+    fun signUp(
+        @RequestParam userRole: UserRole,
+        @Valid @RequestBody signUpRequest: SignUpRequest): ResponseEntity<UserResponse> {
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(userService.signUp(signUpRequest))
+            .body(userService.signUp(userRole, signUpRequest))
     }
 
     @PostMapping("/signin")

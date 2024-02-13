@@ -1,4 +1,4 @@
-//package lsw.practice.domain.post.repository
+//package lsw.practice.domain.user.repository
 //
 ////임포트를 뭘 해야할지를 모르겠음..
 //
