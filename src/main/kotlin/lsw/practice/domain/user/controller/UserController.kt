@@ -51,7 +51,7 @@ class UserController(
 
     @GetMapping("/user-list")
     @PreAuthorize("hasRole('ADMIN')")
-    fun getUserList() : ResponseEntity<List<UserResponse>>{
+    fun getUserList(): ResponseEntity<List<UserResponse>> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(userService.getUserList())
@@ -61,7 +61,7 @@ class UserController(
     fun getUser(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
         userId: Long?
-    ) : ResponseEntity<UserResponse>{
+    ): ResponseEntity<UserResponse> {
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(userService.getUser(userPrincipal, userId))
@@ -71,7 +71,7 @@ class UserController(
     fun deleteUser(
         @AuthenticationPrincipal userPrincipal: UserPrincipal,
         userId: Long?
-    ) : ResponseEntity<Unit>{
+    ): ResponseEntity<Unit> {
         return ResponseEntity
             .status(HttpStatus.NO_CONTENT)
             .body(userService.deleteUser(userPrincipal, userId))

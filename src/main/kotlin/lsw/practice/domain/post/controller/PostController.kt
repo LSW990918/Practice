@@ -88,9 +88,12 @@ class PostController(
     //쿼리DSL추가
 
     @GetMapping("/search")
-    fun searchPostList(@RequestParam(value = "title") title : String) : ResponseEntity<List<PostResponse>>{
+    fun searchPostList(
+        @RequestParam(value = "title") title: String?,
+        @RequestParam(value = "name") name: String?
+    ): ResponseEntity<List<PostResponse>> {
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(postService.searchPostList(title))
+            .body(postService.searchPostList(title, name))
     }
 }

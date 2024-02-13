@@ -10,4 +10,4 @@ data class PostResponse(
     val content: String,
 //    val createdAt: LocalDateTime,
     val comments: List<Comment>
-    )
+)

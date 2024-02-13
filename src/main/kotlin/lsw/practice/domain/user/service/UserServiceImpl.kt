@@ -69,7 +69,8 @@ class UserServiceImpl(
                 ?: throw ModelNotFoundException("user", userId)
         }
         if (userPrincipal.authorities.toString() != "[ROLE_ADMIN]"
-            && !passwordEncoder.matches(password, user.password)) {
+            && !passwordEncoder.matches(password, user.password)
+        ) {
             throw InvalidCredentialException()
         }
         var (name, email) = request
